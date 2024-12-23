@@ -11,19 +11,18 @@ public class Main {
             System.out.print("> ");
             String line = reader.readLine();
             if (line.isEmpty()) break;
-            Error.hadError = false;
             run(line);
         }
     }
 
     public static void run(String source) {
-        Lexer lexer = new Lexer(source);
-        ArrayList<Token> tokens = lexer.lexTokens();
-
-        if (Error.hadError) return;
-
-        tokens.forEach(token -> {
-            System.out.printf("%s %s\n",token.type, token.lexeme);
-        });
+        try {
+            Lexer lexer = new Lexer(source);
+            ArrayList<Token> tokens = lexer.lexTokens();
+            Evaluator evaluator = new Evaluator(tokens);
+            System.out.println(evaluator.evaluateTokens());
+        } catch (Exception error) {
+            System.out.printf("Error: %s\n", error.getMessage());
+        }
     }
 }
