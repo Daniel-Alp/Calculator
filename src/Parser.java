@@ -57,7 +57,7 @@ public class Parser {
 
     private Expr expr(int precedence) {
         Expr left = prefix();
-        while (peek().type != TokenType.EOF && peek().type != TokenType.RIGHT_PAREN) {
+        while (peek().type != TokenType.EOF) {
             // unwind after first error
             if (Error.hadError) {
                 return null;
