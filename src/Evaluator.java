@@ -1,11 +1,11 @@
 public class Evaluator implements Expr.Visitor {
-    public Object evaluate(Expr expr) {
-        return expr.accept(this);
+    public double evaluate(Expr expr) {
+        return (double)expr.accept(this);
     }
 
     @Override
     public Object visitUnaryExpr(Expr.Unary unary) {
-        double right = (double)evaluate(unary.right);
+        double right = evaluate(unary.right);
         if (unary.op.type == TokenType.MINUS) {
             return -right;
         }
@@ -14,8 +14,8 @@ public class Evaluator implements Expr.Visitor {
 
     @Override
     public Object visitBinaryExpr(Expr.Binary binary) {
-        double left = (double)evaluate(binary.left);
-        double right = (double)evaluate(binary.right);
+        double left = evaluate(binary.left);
+        double right = evaluate(binary.right);
         return switch (binary.op.type) {
             case PLUS  -> left + right;
             case MINUS -> left - right;

@@ -11,6 +11,13 @@ public class Parser {
             Map.entry(TokenType.SLASH, 2),
             Map.entry(TokenType.CARET, 3)
     );
+    private final Map<TokenType, Boolean> leftAssocMap = Map.ofEntries(
+            Map.entry(TokenType.PLUS,  true),
+            Map.entry(TokenType.MINUS, true),
+            Map.entry(TokenType.STAR,  true),
+            Map.entry(TokenType.SLASH, true),
+            Map.entry(TokenType.CARET, false)
+    );
 
     Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
@@ -61,7 +68,7 @@ public class Parser {
                 return null;
             }
             int opPrecedence = precedenceMap.get(op.type);
-            if (opPrecedence < precedence) {
+            if (opPrecedence < precedence|| (opPrecedence == precedence && leftAssocMap.get(op.type))) {
                 break;
             }
             eat();
