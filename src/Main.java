@@ -10,19 +10,27 @@ public class Main {
         while (true) {
             System.out.print("> ");
             String line = reader.readLine();
-            if (line.isEmpty()) break;
+            if (line.isBlank()) break;
             run(line);
+            Error.hadError = false;
         }
     }
 
     public static void run(String source) {
-        try {
-            Lexer lexer = new Lexer(source);
-            ArrayList<Token> tokens = lexer.lexTokens();
-            Evaluator evaluator = new Evaluator(tokens);
-            System.out.println(evaluator.evaluateTokens());
-        } catch (Exception error) {
-            System.out.printf("Error: %s\n", error.getMessage());
+        Lexer lexer = new Lexer(source);
+        ArrayList<Token> tokens = lexer.lexTokens();
+        if (Error.hadError) {
+            return;
         }
+
+        Parser parser = new Parser(tokens);
+        Expr expr = parser.parseTokens();
+
+        if (Error.hadError) {
+            return;
+        }
+
+        Evaluator evaluator = new Evaluator();
+        System.out.println(evaluator.evaluate(expr));
     }
 }

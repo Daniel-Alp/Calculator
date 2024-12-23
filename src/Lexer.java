@@ -10,8 +10,7 @@ public class Lexer {
         this.source = source;
     }
 
-
-    public ArrayList<Token> lexTokens() throws Exception {
+    public ArrayList<Token> lexTokens() {
         while (!isAtEnd()) {
             start = current;
             char c = eat();
@@ -30,7 +29,7 @@ public class Lexer {
                     if (Character.isDigit(c)) {
                         number();
                     } else {
-                        throw new Exception(String.format("Error: unexpected character '%s' at %d", c, start+1));
+                        Error.report(String.format("unexpected character '%s'", c), start+1);
                     }
             }
         }
@@ -49,7 +48,9 @@ public class Lexer {
     }
 
     private char peekNext() {
-        if (current + 1 >= source.length()) return '\0';
+        if (current + 1 >= source.length()) {
+            return '\0';
+        }
         return source.charAt(current+1);
     }
 
@@ -66,10 +67,14 @@ public class Lexer {
     }
 
     void number() {
-        while (Character.isDigit(peek())) eat();
+        while (Character.isDigit(peek())) {
+            eat();
+        }
         if (peek() == '.' && Character.isDigit(peekNext())) {
             eat();
-            while (Character.isDigit(peek())) eat();
+            while (Character.isDigit(peek())){
+                eat();
+            }
         }
         String digits = source.substring(start, current);
         addToken(TokenType.NUMBER_LITERAL, Double.parseDouble(digits));
