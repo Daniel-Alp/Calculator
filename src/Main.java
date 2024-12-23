@@ -31,6 +31,6 @@ public class Main {
         }
 
         Evaluator evaluator = new Evaluator();
-        System.out.printf("%.10f\n", evaluator.evaluate(expr));
+        System.out.println(evaluator.evaluate(expr));
     }
 }
