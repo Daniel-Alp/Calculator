@@ -24,7 +24,13 @@ public class Parser {
     }
 
     public Expr parseTokens() {
-        return expr(0);
+        Expr expr = expr(0);
+        // report error if did not use all tokens
+        if (!Error.hadError && peek().type != TokenType.EOF) {
+            Error.report(String.format("unexpected character '%s'", peek().lexeme), peek().offset);
+            return null;
+        }
+        return expr;
     }
 
     private Expr prefix() {
@@ -57,7 +63,7 @@ public class Parser {
 
     private Expr expr(int precedence) {
         Expr left = prefix();
-        while (peek().type != TokenType.EOF) {
+        while (peek().type != TokenType.EOF && peek().type != TokenType.RIGHT_PAREN) {
             // unwind after first error
             if (Error.hadError) {
                 return null;
