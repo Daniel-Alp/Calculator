@@ -25,7 +25,11 @@ public class Parser {
 
     public Expr parseTokens() {
         try {
-            return expr(0);
+            Expr result = expr(0);
+            if (peek().type != TokenType.EOF) {
+                Error.report(String.format("unexpected character '%s'", peek().lexeme), peek().offset);
+            }
+            return result;
         } catch (RuntimeException error) {
             return null;
         }
