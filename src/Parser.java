@@ -11,7 +11,7 @@ public class Parser {
             Map.entry(TokenType.SLASH, 2),
             Map.entry(TokenType.CARET, 3)
     );
-    private final Map<TokenType, Boolean> leftAssocMap = Map.ofEntries(
+    private final Map<TokenType, Boolean> leftAssociativeMap = Map.ofEntries(
             Map.entry(TokenType.PLUS,  true),
             Map.entry(TokenType.MINUS, true),
             Map.entry(TokenType.STAR,  true),
@@ -39,7 +39,7 @@ public class Parser {
         Token token = eat();
         switch (token.type) {
             case MINUS:
-                return new Expr.Unary(token, expr(1));
+                return new Expr.Unary(token, expr(2));
             case LEFT_PAREN:
                 Expr expr = expr(0);
                 if (eat().type != TokenType.RIGHT_PAREN) {
@@ -59,11 +59,11 @@ public class Parser {
         Expr left = prefix();
         while (matchOperator() && precedenceMap.get(peek().type) >= precedence) {
             Token op = eat();
-            int newPrecedence = precedenceMap.get(op.type);
-            if (leftAssocMap.get(op.type)) {
-                newPrecedence++;
+            int subtreePrecedence = precedenceMap.get(op.type);
+            if (leftAssociativeMap.get(op.type)) {
+                subtreePrecedence++;
             }
-            Expr right = expr(newPrecedence);
+            Expr right = expr(subtreePrecedence);
             left = new Expr.Binary(left, op, right);
         }
         return left;
