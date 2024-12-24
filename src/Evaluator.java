@@ -1,4 +1,4 @@
-public class Evaluator implements Expr.Visitor {
+public class Evaluator implements Expr.Visitor<Object> {
     public double evaluate(Expr expr) {
         return (double)expr.accept(this);
     }
