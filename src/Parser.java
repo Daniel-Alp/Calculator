@@ -39,7 +39,7 @@ public class Parser {
         Token token = eat();
         switch (token.type) {
             case MINUS:
-                return new Expr.Unary(token, expr(2));
+                return new Expr.Unary(token, expr(3));
             case LEFT_PAREN:
                 Expr expr = expr(0);
                 if (eat().type != TokenType.RIGHT_PAREN) {
